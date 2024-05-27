@@ -1,6 +1,45 @@
-import React from "react";
+import {useRef} from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+
 
 export default function LogIn(){
+    const email = useRef()
+    const password = useRef()
+    const navigate = useNavigate()
+    async function Submit(){
+        try {
+            const { data } = await axios.post(
+                "http://localhost:4000/login",
+                {
+                    email: email.current.value, 
+                    password: password.current.value,
+                },
+                { withCredentials: true }
+              );
+              const { success, message } = data;
+              if (success) {
+                handleSuccess(message);
+                setTimeout(() => {
+                  navigate("/");
+                }, 1000);
+              } else {
+                handleError(message);
+              }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const handleError = (err) =>
+        toast.error(err, {
+          position: "bottom-left",
+        });
+      const handleSuccess = (msg) =>
+        toast.success(msg, {
+          position: "bottom-right",
+        });
+
     return(
         <>
             <div className="mx-auto max-w-sm space-y-6">
@@ -12,16 +51,17 @@ export default function LogIn(){
                 <div className="space-y-2">
                 <label
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="username"
+                    for="email"
                 >
-                    Username
+                    Email
                 </label>
                 <input
+                    ref={email}
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     id="username"
                     placeholder="Enter your username"
                     required=""
-                    type="text"
+                    type="email"
                 />
                 </div>
                 <div className="space-y-2">
@@ -32,6 +72,7 @@ export default function LogIn(){
                     Password
                 </label>
                 <input
+                    ref={password}
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     id="password"
                     placeholder="Enter your password"
@@ -40,12 +81,14 @@ export default function LogIn(){
                 />
                 </div>
                 <button
+                onClick={(e)=>{e.preventDefault();Submit()}}
                 className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
                 type="submit"
                 >
                 Login
                 </button>
             </div>
+            <ToastContainer/>
             </div>
         </>
     )

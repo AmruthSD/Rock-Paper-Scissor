@@ -11,9 +11,9 @@ mongoose.connect(MONGODB_URL).then(()=>console.log("DB connected")).catch(e=>con
 
 app.use(
     cors({
-      origin: ["http://localhost:4000"],
+      origin: ["http://localhost:5173"],
       methods: ["GET", "POST", "PUT", "DELETE"],
-      credentials: true,
+      credentials: true
     })
   );
   
