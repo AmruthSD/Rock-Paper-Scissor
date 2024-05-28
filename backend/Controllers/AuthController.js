@@ -16,6 +16,10 @@ module.exports.Signup = async (req, res, next) => {
       withCredentials: true,
       httpOnly: false,
     });
+    res.cookie("id", user._id, {
+      withCredentials: true,
+      httpOnly: false,
+    });
     res
       .status(201)
       .json({ message: "User signed in successfully", success: true, user });
@@ -28,7 +32,6 @@ module.exports.Signup = async (req, res, next) => {
 module.exports.Login = async (req, res, next) => {
     try {
       const { email, password } = req.body;
-      console.log(email,password)
       if(!email || !password ){
         return res.json({message:'All fields are required'})
       }
@@ -45,6 +48,10 @@ module.exports.Login = async (req, res, next) => {
          withCredentials: true,
          httpOnly: false,
        });
+       res.cookie("id", user._id, {
+        withCredentials: true,
+        httpOnly: false,
+      });
        res.status(201).json({ message: "User logged in successfully", success: true });
        next()
     } catch (error) {
