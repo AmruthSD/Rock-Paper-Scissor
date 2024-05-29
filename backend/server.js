@@ -53,7 +53,14 @@ io.on("connection",(socket)=>{
       io.to(allPlayers[socket.id].opp_socket_id).emit('Opponent-Finished',{oppfin:true})
     }
   })
-
+  socket.on('disconnect',()=>{
+    console.log(socket.id)
+    if(!allPlayers[socket.id].matchDone){
+      allPlayers[allPlayers[socket.id].opp_socket_id].matchDone=true;
+      io.to(allPlayers[socket.id].opp_socket_id).emit('Result',{youWin:true})
+    }
+    delete allPlayers[socket.id];
+  })
 })
 
 io.listen(5000,()=>{
@@ -66,7 +73,9 @@ server.listen(PORT, () => {
 
 function ConnectPlayers(socket,data){
   console.log(data)
+  
   allPlayers[socket.id]={id:data.id,name:data.name}
+  allPlayers[socket.id].matchDone = false;
   if(waitingPlayers.size===0){
     waitingPlayers.add({socket_id: socket.id,id: data.id,name: data.name})
   }
@@ -128,10 +137,14 @@ function RoundOver(data,socket){
   allPlayers[socket.id].turn='wait';
   allPlayers[allPlayers[socket.id].opp_socket_id].turn='wait'
   if(allPlayers[socket.id].score===3){
+    allPlayers[socket.id].matchDone = true;
+    allPlayers[allPlayers[socket.id].opp_socket_id].matchDone = true;
     io.to(socket.id).emit('Result',{youWin:true})
     io.to(allPlayers[socket.id].opp_socket_id).emit('Result',{youWin:false})
   }
   else if(allPlayers[allPlayers[socket.id].opp_socket_id].score===3){
+    allPlayers[socket.id].matchDone = true;
+    allPlayers[allPlayers[socket.id].opp_socket_id].matchDone = true;
     io.to(socket.id).emit('Result',{youWin:false})
     io.to(allPlayers[socket.id].opp_socket_id).emit('Result',{youWin:true})
   }

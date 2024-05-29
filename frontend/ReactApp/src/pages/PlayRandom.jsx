@@ -14,8 +14,10 @@ export default function PlayRandom(){
     const [youWin,setYouWin] = useState(false)
     const [urScore,setUrScore] = useState(0)
     const [oppScore,setOppScore] = useState(0)
+    const [loading,setLoading] = useState(true)
     useEffect(() => {
         socket.connect();
+        setLoading(false)
         socket.emit('public-connect',{
             id: cookies.id,
             name:cookies.name
@@ -26,29 +28,46 @@ export default function PlayRandom(){
     }, []);
     useEffect(()=>{
         const handelStopWaiting=(data)=>{
+            setLoading(true)
             setOppData(data)
             setWaiting(false)
+            setLoading(false)
         }
         socket.on('Stop-Waiting',handelStopWaiting)
 
         const handelResult=(data)=>{
+            setLoading(true)
             setYouWin(data.youWin);
             setResult(true);
-            alert(`You ${youWin?'Win':'Loose'}`)
-            navigate('/')
+            if(data.youWin){
+                setUrScore(3)
+            }
+            else{
+                setOppScore(3)
+            }
+            setLoading(false)
+            const timerId = setTimeout(() => {
+                navigate('/')
+              }, 3000);
+            return () => clearTimeout(timerId);
+            
         }
         socket.on('Result',handelResult)
 
         const handelOppFin=(data)=>{
+            setLoading(true)
             setOppTurn(data.oppfin)
+            setLoading(false)
         }
         socket.on('Opponent-Finished',handelOppFin)
 
         const handelRound=(data)=>{
+            setLoading(true)
             setUrScore(data.yourScore)
             setOppScore(data.oppScore)
             setMyTurn(true)
             setOppTurn(false)
+            setLoading(false)
         }
         socket.on('Round',handelRound)
         return ()=>{
@@ -59,11 +78,17 @@ export default function PlayRandom(){
         }
     },[])
     useEffect(()=>{
+        setLoading(true)
         if(!myTurn){
             socket.emit('Turn',{turn:turn})            
         }
+        setLoading(false)
     },[myTurn])
-
+    if(loading){
+        return(<>
+            Loading
+        </>)
+    }
     if(waiting){
         return(<>
             Waiting for opponent
@@ -72,19 +97,23 @@ export default function PlayRandom(){
     return(
         <>
             <div>
+                {
+                    (result)&&
+                    <div>{youWin?'Congats you win':'All the Best Next time'}</div>
+                }
                 
                 <div>
                     <div>Name {cookies.name}</div>
                     <div>Score {urScore}</div>
-                    { myTurn &&
+                    {(!result && myTurn) &&
                         <div>
-                            <button onClick={()=>{setTurn('Rock');setMyTurn(false)}}>Rock</button>
-                            <button onClick={()=>{setTurn('Paper');setMyTurn(false)}}>Paper</button>
-                            <button onClick={()=>{setTurn('Scissor');setMyTurn(false)}}>Scissor</button>
+                            <button onClick={()=>{setLoading(true);setTurn('Rock');setMyTurn(false);setLoading(false)}}>Rock</button>
+                            <button onClick={()=>{setLoading(true);setTurn('Paper');setMyTurn(false);setLoading(false)}}>Paper</button>
+                            <button onClick={()=>{setLoading(true);setTurn('Scissor');setMyTurn(false);setLoading(false)}}>Scissor</button>
                         </div>
                     }
                     {
-                        !myTurn && 
+                        (!result && !myTurn) && 
                         <div>
                             You Choose {turn}
                         </div>
@@ -94,7 +123,10 @@ export default function PlayRandom(){
                 <div>
                     <div>Name {oppData.name}</div>
                     <div>Score {oppScore}</div>
+                    {
+                        !result && 
                     <div>{oppTurn?'Opponent Finised':'Waiting for Opponent'}</div>
+                    }
                 </div>
             </div>
         </>
