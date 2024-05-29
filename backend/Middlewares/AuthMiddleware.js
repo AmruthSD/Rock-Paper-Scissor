@@ -10,12 +10,12 @@ module.exports.userVerification = async (req, res,next) => {
   try {
     
     const verified = jwt.verify(token, SECRET_KEY);
-    return res.send('Hello')
     next()
   } catch (err) {
     if (err.name === 'TokenExpiredError') {
       return res.status(401).send('Access Denied: Token Expired');
     }
+    return res.status(400).send('Sad')
   }
-  return res.status(400).send('Sad')
+  
 }
