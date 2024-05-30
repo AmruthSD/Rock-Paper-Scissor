@@ -1,3 +1,4 @@
+const mongoose  = require("mongoose");
 const User = require("../Models/UserModel");
 const {createSecretToken} = require("../utils/SecretToken")
 const bcrypt = require("bcrypt");
@@ -66,3 +67,17 @@ module.exports.Login = async (req, res, next) => {
       console.error(error);
     }
   }
+
+module.exports.UserData = async(req,res)=>{
+  
+  try {
+    const { id } = req.body;
+    const data = await User.findById(id);
+    if(!data){
+      return res.status(404).json({message:'Not Found'})
+    }
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+}

@@ -1,14 +1,17 @@
-import {useRef} from "react";
+import {useRef,useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
 
 
 export default function LogIn(){
     const email = useRef()
     const password = useRef()
     const navigate = useNavigate()
+    const [suc,setSuc] = useState('')
+    const [er,setEr] = useState('')
+    const [loading,setLoading] = useState(false)
     async function Submit(){
+        setLoading(true)
         try {
             const { data } = await axios.post(
                 "http://localhost:4000/login",
@@ -20,28 +23,31 @@ export default function LogIn(){
               );
               const { success, message } = data;
               if (success) {
-                handleSuccess(message);
+                setSuc(message)
+                setEr('')
+                setLoading(false)
                 setTimeout(() => {
                   navigate("/");
                 }, 1000);
               } else {
-                handleError(message);
+                setEr(message)
+                setSuc('')
+                setLoading(false)
               }
         } catch (error) {
             console.log(error)
+            setLoading(false)
         }
+        
     }
-    const handleError = (err) =>
-        toast.error(err, {
-          position: "bottom-left",
-        });
-      const handleSuccess = (msg) =>
-        toast.success(msg, {
-          position: "bottom-right",
-        });
-
+    if(loading){
+        return <>Loading</>
+    }
     return(
         <>
+<div className="flex items-center justify-center h-screen">
+  <div className="bg-gray-200 p-6">
+    
             <div className="mx-auto max-w-sm space-y-6">
             <div className="space-y-2 text-center">
                 <h1 className="text-3xl font-bold">Login</h1>
@@ -88,8 +94,14 @@ export default function LogIn(){
                 Login
                 </button>
             </div>
-            <ToastContainer/>
+            {suc!=='' && <div className="bg-green-500 text-white p-4">{suc}</div>}
+            {er!=='' && <div className="bg-red-500 text-white p-4">{er}</div>}
             </div>
-        </>
+            <div className="flex justify-center items-center">
+            <Link to='/signup' className="text-blue-400">Need an Account Signup</Link>
+            </div>
+  </div>
+</div>
+</>
     )
 }

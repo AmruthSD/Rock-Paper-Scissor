@@ -8,6 +8,7 @@ const app = express();
 const http = require('http')
 const server = http.createServer(app);
 const { Server } = require("socket.io");
+const User = require('./Models/UserModel')
 const io = new Server({
   cors: {
     origin: ["http://localhost:5173"],
@@ -32,11 +33,11 @@ app.use(
 
 app.use(cookieParser())  
 app.use(express.json());
-
+app.use('/pro',X.userVerification)
 app.use('/',authRoute);
-app.get('/pro',X.userVerification)
 
-const waitingPlayers = new Set();
+
+const waitingPlayers ={};
 const allPlayers = {}
 
 
@@ -55,9 +56,13 @@ io.on("connection",(socket)=>{
   })
   socket.on('disconnect',()=>{
     console.log(socket.id)
-    if(!allPlayers[socket.id].matchDone){
+    if(!allPlayers[socket.id].matchDone && allPlayers[socket.id].opp_socket_id!==undefined && allPlayers[allPlayers[socket.id].opp_socket_id]!==undefined){
       allPlayers[allPlayers[socket.id].opp_socket_id].matchDone=true;
       io.to(allPlayers[socket.id].opp_socket_id).emit('Result',{youWin:true})
+      UpdateRating(allPlayers[socket.id].opp_id,allPlayers[socket.id].id)
+    }
+    if(waitingPlayers[socket.id]){
+      delete waitingPlayers[socket.id]
     }
     delete allPlayers[socket.id];
   })
@@ -76,13 +81,15 @@ function ConnectPlayers(socket,data){
   
   allPlayers[socket.id]={id:data.id,name:data.name}
   allPlayers[socket.id].matchDone = false;
-  if(waitingPlayers.size===0){
-    waitingPlayers.add({socket_id: socket.id,id: data.id,name: data.name})
+  if(Object.keys(waitingPlayers).length === 0){
+    waitingPlayers[socket.id]={id: data.id,name: data.name}
   }
   else{
-    const iterator = waitingPlayers.values();
-    const firstValue = iterator.next().value;
-    waitingPlayers.delete(firstValue);
+    const firstEntry = Object.entries(waitingPlayers)[0];
+    console.log(firstEntry)
+    const [firstKey, firstValue] = firstEntry;
+    delete waitingPlayers[firstEntry];
+    firstValue.socket_id = firstKey;
     allPlayers[socket.id].opp_socket_id = firstValue.socket_id
     allPlayers[socket.id].opp_id = firstValue.id
     allPlayers[socket.id].opp_name = firstValue.name
@@ -99,7 +106,7 @@ function ConnectPlayers(socket,data){
 }
 
 
-function RoundOver(data,socket){
+async function RoundOver(data,socket){
   if(data.turn==='Rock'){
     if(allPlayers[allPlayers[socket.id].opp_socket_id].turn==='Rock'){
       
@@ -141,12 +148,14 @@ function RoundOver(data,socket){
     allPlayers[allPlayers[socket.id].opp_socket_id].matchDone = true;
     io.to(socket.id).emit('Result',{youWin:true})
     io.to(allPlayers[socket.id].opp_socket_id).emit('Result',{youWin:false})
-  }
+    await UpdateRating(allPlayers[socket.id].id,allPlayers[socket.id].opp_id)
+  } 
   else if(allPlayers[allPlayers[socket.id].opp_socket_id].score===3){
     allPlayers[socket.id].matchDone = true;
     allPlayers[allPlayers[socket.id].opp_socket_id].matchDone = true;
     io.to(socket.id).emit('Result',{youWin:false})
     io.to(allPlayers[socket.id].opp_socket_id).emit('Result',{youWin:true})
+    await UpdateRating(allPlayers[socket.id].opp_id,allPlayers[socket.id].id)
   }
   else{
     io.to(socket.id).emit('Round',{yourScore:allPlayers[socket.id].score , oppScore:allPlayers[allPlayers[socket.id].opp_socket_id].score})
@@ -156,5 +165,29 @@ function RoundOver(data,socket){
 }
 
 async function UpdateRating(winner_id,looser_id){
-
+  try {
+    const Wdata = await User.findById(winner_id)
+    const Ldata = await User.findById(looser_id)
+    var diff = 0
+    if(Wdata.rating >= Ldata.rating){
+      diff = 8;
+    }
+    else{
+      diff = Math.ceil((Ldata.rating - Wdata.rating)/4);
+      if(diff>50){
+        diff = 50;
+      }
+      if(diff<8){
+        diff = 8;
+      } 
+    }
+    Wdata.rating += diff;
+    Ldata.rating -= diff;
+    Wdata.save()
+    Ldata.save()
+    
+  } catch (error) {
+    console.log(error)
+  }
+  
 }
