@@ -102,7 +102,14 @@ export default function PlayRandom() {
     }
     if (waiting) {
         return (<>
-            Waiting for opponent
+            <div className="flex justify-center items-center h-screen bg-cover bg-center" style={{backgroundImage: "url('https://img.freepik.com/free-vector/realistic-neon-lights-background_52683-59889.jpg?size=626&ext=jpg&ga=GA1.1.44546679.1717027200&semt=ais_user')"}}>
+
+                <div >
+                    <div className="flex justify-center items-center text-sky-500 font-black text-5xl pb-11">
+                        Waiting For Opponent
+                    </div>
+                </div>
+        </div>
         </>);
     }
     return (

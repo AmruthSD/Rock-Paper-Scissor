@@ -11,7 +11,7 @@ export default function Home(){
     useEffect(() => {
         setLoading(true)
         if (!cookies.id || !cookies.name) {
-            navigate('/login'); 
+            //navigate('/login'); 
         }
         console.log(cookies)
         const getData = async()=>{
@@ -21,10 +21,10 @@ export default function Home(){
             { withCredentials: true }
           );
           setData(res.data)
+          console.log(res.data)
         }
         try {
             getData();
-            console.log(userData)
         } catch (error) {
             console.log(error)
         }

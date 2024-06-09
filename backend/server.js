@@ -7,9 +7,9 @@ const authRoute = require('./Routes/AuthRouter')
 const app = express();
 const http = require('http')
 const server = http.createServer(app);
-const { Server } = require("socket.io");
+const socketIo = require('socket.io');
 const User = require('./Models/UserModel')
-const io = new Server({
+const io = socketIo(server,{
   cors: {
     origin: ["http://localhost:5173"],
     credentials: true,
@@ -68,9 +68,6 @@ io.on("connection",(socket)=>{
   })
 })
 
-io.listen(5000,()=>{
-  console.log("IO is listening on port 5000")
-})
 server.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
 });
