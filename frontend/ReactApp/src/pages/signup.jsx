@@ -2,7 +2,7 @@ import {useRef,useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Cookies } from "react-cookie";
-
+import SignupImg from '../assets/signup.png'
 
 export default function SignUp(){
     const username =  useRef();
@@ -60,7 +60,7 @@ export default function SignUp(){
     return(
         <>
 <div className="flex items-center justify-center h-screen" style={{
-        backgroundImage: `url('https://images.alphacoders.com/123/1233065.png')`,
+        backgroundImage: `url(${SignupImg})`,
         backgroundSize: '100% 100%',
         backgroundPosition: 'center',
         width: '100vw',

@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { socket } from "../socket.js";
 import { Cookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
-import Rock from "../assets/Rock.jsx";
+import WaitImg from '../assets/waiting.jpg'
+import GameImg from '../assets/Game.jpg'
+import Stone from '../assets/stone.png'
+import Scissor from '../assets/scissors.png'
+import Paper from '../assets/paper.png'
 
 export default function PlayRandom() {
     const navigate = useNavigate();
@@ -17,7 +21,8 @@ export default function PlayRandom() {
     const [urScore, setUrScore] = useState(0);
     const [oppScore, setOppScore] = useState(0);
     const [loading, setLoading] = useState(true);
-
+    const [oppChoice,setOppChoice] = useState('');
+    const [roundLoad,setRoundLoad] = useState(true)
     useEffect(() => {
         if (!cookies.get('id') || !cookies.get('name')) {
             navigate('/login'); 
@@ -69,9 +74,17 @@ export default function PlayRandom() {
             setLoading(true);
             setUrScore(data.yourScore);
             setOppScore(data.oppScore);
-            setMyTurn(true);
-            setOppTurn(false);
+            setOppChoice(data.oppTurn)
             setLoading(false);
+            const roundOverTimeOut = setTimeout(() => {
+                setLoading(true)
+                setMyTurn(true);
+                setOppTurn(false);
+                setLoading(false)
+            }, 1000);
+            return ()=>clearTimeout(roundOverTimeOut)
+            
+            
         };
 
         socket.on('Stop-Waiting', handelStopWaiting);
@@ -103,9 +116,8 @@ export default function PlayRandom() {
     
     if (waiting) {
         return (<>
-        <Rock></Rock>
             <div className="flex items-center justify-center h-screen" style={{
-        backgroundImage: `url('https://i.pinimg.com/originals/6e/20/ba/6e20ba02d9ef4ae563b1a9a8335b6a65.jpg')`,
+        backgroundImage: `url(${WaitImg})`,
         backgroundSize: '100% 100%',
         backgroundPosition: 'center',
         width: '100vw',
@@ -122,14 +134,16 @@ export default function PlayRandom() {
     }
     return (
         <>
-        <div className="flex text-white items-center justify-center h-screen" style={{
-        backgroundImage: `url('https://i.pinimg.com/550x/2a/8f/ef/2a8fef14a2ea568ad37b43ca5a300e90.jpg')`,
+        <div className="flex text-white items-center justify-center h-screen text-3xl font-bold" style={{
+        backgroundImage: `url(${GameImg})`,
         backgroundSize: '100% 100%',
         backgroundPosition: 'center',
         width: '100vw',
         height: '100vh',
         overflow: 'hidden',
-      }}>
+        
+      }}
+      >
             <div>
             {
                     (result) &&
@@ -138,7 +152,7 @@ export default function PlayRandom() {
             </div>
             
                 
-                <div className="ml-32 grow flex flex-col justify-center items-center space-y-10">
+                <div className=" grow flex-1 flex flex-col justify-center items-center space-y-10">
                     <div>Name: {cookies.get('name')}</div>
                     <div>Score: {urScore}</div>
                     {(!result && myTurn) &&
@@ -146,31 +160,54 @@ export default function PlayRandom() {
 
                             <button onClick={() => { setLoading(true); setTurn('Rock'); setMyTurn(false); setLoading(false); }}
                              style={{
-                                backgroundImage: `url('Rock-Paper-Scissor/frontend/ReactApp/src/assets/3115046_18803.svg')`,
+                                backgroundImage: `url(${Stone})`,
                                 width: '200px',
                                 height: '200px',
                                 backgroundPosition: 'center',
-                                backgroundColor:'rgba(255,255,255,1)',
+                                backgroundSize: 'cover',
+                                
                                 }}   
                             >Rock</button>
-                            <button onClick={() => { setLoading(true); setTurn('Paper'); setMyTurn(false); setLoading(false); }}>Paper</button>
-                            <button onClick={() => { setLoading(true); setTurn('Scissor'); setMyTurn(false); setLoading(false); }}>Scissors</button>
+                            <button onClick={() => { setLoading(true); setTurn('Paper'); setMyTurn(false); setLoading(false); }}
+                                style={{
+                                    backgroundImage: `url(${Paper})`,
+                                    width: '200px',
+                                    height: '200px',
+                                    backgroundPosition: 'center',
+                                    backgroundSize: 'cover',
+                                    
+                                    }} 
+                                
+                                >Paper</button>
+                            <button onClick={() => { setLoading(true); setTurn('Scissor'); setMyTurn(false); setLoading(false); }}
+                                style={{
+                                    backgroundImage: `url(${Scissor})`,
+                                    width: '200px',
+                                    height: '200px',
+                                    backgroundPosition: 'center',
+                                    backgroundSize: 'cover',
+                                    
+                                    }} 
+                                
+                                >Scissors</button>
                         </div>
                     }
                     {
                         (!result && !myTurn) &&
                         <div>
-                            You chose: {turn}
+                            {
+                                turn==='Rock'?<img src={Stone} width={200} height={200}/>:   turn==='Paper'?<img src={Paper} width={200} height={200}/>:<img src={Scissor} width={200} height={200}/>
+                            }
                         </div>
                     }
                 </div>
 
-                <div className="mr-32 grow flex flex-col justify-center items-center space-y-10">
+                <div className="grow flex-1 flex flex-col justify-center items-center space-y-10">
                     <div>Name: {oppData.name}</div>
                     <div>Score: {oppScore}</div>
                     {
                         !result &&
-                        <div>{oppTurn ? 'Opponent finished' : 'Waiting for opponent'}</div>
+                        <div>{oppTurn ? 'Opponent finished' : 'Waiting for opponent ....'}</div>
                     }
                 </div>
             

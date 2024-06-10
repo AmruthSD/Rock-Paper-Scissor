@@ -2,7 +2,8 @@ import {useRef,useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {Cookies} from 'react-cookie';
-
+import Img from '../assets/stone.png'
+import LoginImg from '../assets/login.jpg'
 export default function LogIn(){
     const email = useRef()
     const password = useRef()
@@ -49,8 +50,9 @@ export default function LogIn(){
     }
     return(
         <>
+        
 <div className="flex items-center justify-center h-screen" style={{
-        backgroundImage: `url('https://wallpapers.com/images/hd/jujutsu-kaisen-desktop-dop1qg91897uy8i8.jpg')`,
+        backgroundImage: `url(${LoginImg})`,
         backgroundSize: '100% 100%',
         backgroundPosition: 'center',
         width: '100vw',

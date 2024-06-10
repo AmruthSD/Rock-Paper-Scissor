@@ -44,7 +44,7 @@ const allPlayers = {}
 
 
 io.on("connection",(socket)=>{
-  console.log('connected',socket.id)
+  
   socket.on('public-connect',(data)=>ConnectPlayers(socket,data))
   socket.on('Turn',(data)=>{
     allPlayers[socket.id].turn = data.turn;
@@ -56,7 +56,7 @@ io.on("connection",(socket)=>{
     }
   })
   socket.on('disconnect',()=>{
-    console.log(socket.id)
+    
     if(!allPlayers[socket.id].matchDone && allPlayers[socket.id].opp_socket_id!==undefined && allPlayers[allPlayers[socket.id].opp_socket_id]!==undefined){
       allPlayers[allPlayers[socket.id].opp_socket_id].matchDone=true;
       io.to(allPlayers[socket.id].opp_socket_id).emit('Result',{youWin:true})
@@ -75,7 +75,7 @@ server.listen(PORT, () => {
 
 
 function ConnectPlayers(socket,data){
-  console.log(data)
+  
   
   allPlayers[socket.id]={id:data.id,name:data.name}
   allPlayers[socket.id].matchDone = false;
@@ -84,7 +84,7 @@ function ConnectPlayers(socket,data){
   }
   else{
     const firstEntry = Object.entries(waitingPlayers)[0];
-    console.log(firstEntry)
+    
     const [firstKey, firstValue] = firstEntry;
     delete waitingPlayers[firstEntry];
     firstValue.socket_id = firstKey;
@@ -139,8 +139,7 @@ async function RoundOver(data,socket){
       
     }
   }
-  allPlayers[socket.id].turn='wait';
-  allPlayers[allPlayers[socket.id].opp_socket_id].turn='wait'
+  
   if(allPlayers[socket.id].score===3){
     allPlayers[socket.id].matchDone = true;
     allPlayers[allPlayers[socket.id].opp_socket_id].matchDone = true;
@@ -156,10 +155,11 @@ async function RoundOver(data,socket){
     await UpdateRating(allPlayers[socket.id].opp_id,allPlayers[socket.id].id)
   }
   else{
-    io.to(socket.id).emit('Round',{yourScore:allPlayers[socket.id].score , oppScore:allPlayers[allPlayers[socket.id].opp_socket_id].score})
-    io.to(allPlayers[socket.id].opp_socket_id).emit('Round',{yourScore:allPlayers[allPlayers[socket.id].opp_socket_id].score,oppScore:allPlayers[socket.id].score})
+    io.to(socket.id).emit('Round',{yourScore:allPlayers[socket.id].score , oppScore:allPlayers[allPlayers[socket.id].opp_socket_id].score , oppTurn:allPlayers[allPlayers[socket.id].opp_socket_id].turn})
+    io.to(allPlayers[socket.id].opp_socket_id).emit('Round',{yourScore:allPlayers[allPlayers[socket.id].opp_socket_id].score,oppScore:allPlayers[socket.id].score,oppTurn:allPlayers[socket.id].turn})
   }
-
+  allPlayers[socket.id].turn='wait';
+  allPlayers[allPlayers[socket.id].opp_socket_id].turn='wait'
 }
 
 async function UpdateRating(winner_id,looser_id){
