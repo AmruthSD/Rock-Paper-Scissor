@@ -76,8 +76,10 @@ export default function PlayRandom() {
             setOppScore(data.oppScore);
             setOppChoice(data.oppTurn)
             setLoading(false);
+            setRoundLoad(false)
             const roundOverTimeOut = setTimeout(() => {
                 setLoading(true)
+                setRoundLoad(true)
                 setMyTurn(true);
                 setOppTurn(false);
                 setLoading(false)
@@ -208,6 +210,13 @@ export default function PlayRandom() {
                     {
                         !result &&
                         <div>{oppTurn ? 'Opponent finished' : 'Waiting for opponent ....'}</div>
+                    }
+                    {
+                        !roundLoad && <div>
+                            {
+                                oppChoice==='Rock'?<img src={Stone} width={200} height={200}/>:   oppChoice==='Paper'?<img src={Paper} width={200} height={200}/>:<img src={Scissor} width={200} height={200}/>
+                            }
+                        </div>
                     }
                 </div>
             
