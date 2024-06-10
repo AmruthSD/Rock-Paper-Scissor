@@ -11,23 +11,11 @@ module.exports.Signup = async (req, res, next) => {
     if (existingUser) {
       return res.json({ message: "User already exists" });
     }
-    const user = await User.create({ email, password, username, createdAt });
+    const user = await User.create({ email:email, password:password, username:username, createdAt:createdAt });
     const token = createSecretToken(user._id);
-    res.cookie("token", token, {
-      withCredentials: true,
-      httpOnly: false,
-    });
-    res.cookie("id", user._id, {
-      withCredentials: true,
-      httpOnly: false,
-    });
-    res.cookie("name", user.username, {
-      withCredentials: true,
-      httpOnly: false,
-    });
     res
       .status(201)
-      .json({ message: "User signed in successfully", success: true, user });
+      .json({ message: "User signed in successfully", success: true,token:token,id: user._id,name: user.username});
     next();
   } catch (error) {
     console.error(error);
@@ -40,29 +28,23 @@ module.exports.Login = async (req, res, next) => {
       if(!email || !password ){
         return res.json({message:'All fields are required'})
       }
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ email:email });
       if(!user){
         return res.json({message:'Incorrect password or email' }) 
       }
-      const auth = await bcrypt.compare(password,user.password)
-      if (!auth) {
-        return res.json({message:'Incorrect password or email' }) 
-      }
-       const token = createSecretToken(user._id);
-       res.cookie("token", token, {
-         withCredentials: true,
-         httpOnly: false,
-       });
-       res.cookie("id", user._id, {
-        withCredentials: true,
-        httpOnly: false,
-      });
-      res.cookie("name", user.username, {
-        withCredentials: true,
-        httpOnly: false,
-      });
-       res.status(201).json({ message: "User logged in successfully", success: true });
-       next()
+      bcrypt.compare(password,user.password,(er,result)=>{
+        if(er){
+          console.log(er)
+        }
+        if (!result) {
+          return res.json({message:'Incorrect password or email' }) 
+        }else{
+          const token = createSecretToken(user._id);
+          return res.json({ message: "User Logged in successfully", success: true,token:token,id: user._id,name: user.username});
+        }
+        
+      })
+    
     } catch (error) {
       console.error(error);
     }

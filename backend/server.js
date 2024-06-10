@@ -33,8 +33,9 @@ app.use(
 
 app.use(cookieParser())  
 app.use(express.json());
-app.use('/pro',X.userVerification)
 app.use('/',authRoute);
+app.use('/pro',X.userVerification)
+
 
 
 const waitingPlayers ={};

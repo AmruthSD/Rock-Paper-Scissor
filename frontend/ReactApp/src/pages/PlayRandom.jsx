@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { socket } from "../socket.js";
-import { useCookies } from "react-cookie";
+import { Cookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
 
 export default function PlayRandom() {
     const navigate = useNavigate();
     const [waiting, setWaiting] = useState(true);
-    const [cookies, setCookie] = useCookies(['id', 'name']);
+    const cookies = new Cookies();
     const [oppData, setOppData] = useState({});
     const [myTurn, setMyTurn] = useState(true);
     const [turn, setTurn] = useState('');
@@ -18,17 +18,16 @@ export default function PlayRandom() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!cookies.id || !cookies.name) {
+        if (!cookies.get('id') || !cookies.get('name')) {
             navigate('/login'); 
         }
-    }, [cookies, navigate]);    
+    }, []);    
     useEffect(() => {
-        console.log("Component mounted. Initial cookie values: ", cookies);
         socket.connect();
         setLoading(false);
         socket.emit('public-connect', {
-            id: cookies.id,
-            name: cookies.name
+            id: cookies.get('id'),
+            name: cookies.get('name')
         });
         return () => {
             socket.disconnect();
@@ -121,7 +120,7 @@ export default function PlayRandom() {
                 }
 
                 <div>
-                    <div>Name: {cookies.name}</div>
+                    <div>Name: {cookies.get('name')}</div>
                     <div>Score: {urScore}</div>
                     {(!result && myTurn) &&
                         <div>

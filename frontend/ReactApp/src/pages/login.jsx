@@ -1,7 +1,7 @@
 import {useRef,useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import {Cookies} from 'react-cookie';
 
 export default function LogIn(){
     const email = useRef()
@@ -21,9 +21,13 @@ export default function LogIn(){
                 },
                 { withCredentials: true }
               );
-              const { success, message } = data;
+              const { success, message,token,id,name } = data;
               if (success) {
                 setSuc(message)
+                const cookies = new Cookies();
+                cookies.set('token',token,{ path: '/',expires: new Date(Date.now() + 3*24*60*60) })
+                cookies.set('id',id,{ path: '/',expires: new Date(Date.now() + 3*24*60*60) });
+                cookies.set('name',name,{ path: '/',expires: new Date(Date.now() + 3*24*60*60) });
                 setEr('')
                 setLoading(false)
                 setTimeout(() => {
