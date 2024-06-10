@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { socket } from "../socket.js";
 import { Cookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
+import Rock from "../assets/Rock.jsx";
 
 export default function PlayRandom() {
     const navigate = useNavigate();
@@ -99,13 +100,21 @@ export default function PlayRandom() {
             Loading
         </>);
     }
+    
     if (waiting) {
         return (<>
-            <div className="flex justify-center items-center h-screen bg-cover bg-center" style={{backgroundImage: "url('https://img.freepik.com/free-vector/realistic-neon-lights-background_52683-59889.jpg?size=626&ext=jpg&ga=GA1.1.44546679.1717027200&semt=ais_user')"}}>
-
+        <Rock></Rock>
+            <div className="flex items-center justify-center h-screen" style={{
+        backgroundImage: `url('https://i.pinimg.com/originals/6e/20/ba/6e20ba02d9ef4ae563b1a9a8335b6a65.jpg')`,
+        backgroundSize: '100% 100%',
+        backgroundPosition: 'center',
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+      }}>
                 <div >
-                    <div className="flex justify-center items-center text-sky-500 font-black text-5xl pb-11">
-                        Waiting For Opponent
+                    <div className="flex justify-center items-center text-white font-black text-5xl pb-11 mb-32">
+                        Waiting For Opponent .......
                     </div>
                 </div>
         </div>
@@ -113,18 +122,37 @@ export default function PlayRandom() {
     }
     return (
         <>
+        <div className="flex text-white items-center justify-center h-screen" style={{
+        backgroundImage: `url('https://i.pinimg.com/550x/2a/8f/ef/2a8fef14a2ea568ad37b43ca5a300e90.jpg')`,
+        backgroundSize: '100% 100%',
+        backgroundPosition: 'center',
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+      }}>
             <div>
-                {
+            {
                     (result) &&
                     <div>{youWin ? 'Congrats, you win!' : 'Better luck next time!'}</div>
-                }
-
-                <div>
+            }
+            </div>
+            
+                
+                <div className="ml-32 grow flex flex-col justify-center items-center space-y-10">
                     <div>Name: {cookies.get('name')}</div>
                     <div>Score: {urScore}</div>
                     {(!result && myTurn) &&
                         <div>
-                            <button onClick={() => { setLoading(true); setTurn('Rock'); setMyTurn(false); setLoading(false); }}>Rock</button>
+
+                            <button onClick={() => { setLoading(true); setTurn('Rock'); setMyTurn(false); setLoading(false); }}
+                             style={{
+                                backgroundImage: `url('Rock-Paper-Scissor/frontend/ReactApp/src/assets/3115046_18803.svg')`,
+                                width: '200px',
+                                height: '200px',
+                                backgroundPosition: 'center',
+                                backgroundColor:'rgba(255,255,255,1)',
+                                }}   
+                            >Rock</button>
                             <button onClick={() => { setLoading(true); setTurn('Paper'); setMyTurn(false); setLoading(false); }}>Paper</button>
                             <button onClick={() => { setLoading(true); setTurn('Scissor'); setMyTurn(false); setLoading(false); }}>Scissors</button>
                         </div>
@@ -137,7 +165,7 @@ export default function PlayRandom() {
                     }
                 </div>
 
-                <div>
+                <div className="mr-32 grow flex flex-col justify-center items-center space-y-10">
                     <div>Name: {oppData.name}</div>
                     <div>Score: {oppScore}</div>
                     {
@@ -145,7 +173,8 @@ export default function PlayRandom() {
                         <div>{oppTurn ? 'Opponent finished' : 'Waiting for opponent'}</div>
                     }
                 </div>
-            </div>
+            
+        </div>
         </>
     );
 }

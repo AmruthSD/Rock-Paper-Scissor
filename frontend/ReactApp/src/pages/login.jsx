@@ -49,18 +49,25 @@ export default function LogIn(){
     }
     return(
         <>
-<div className="flex items-center justify-center h-screen">
-  <div className="bg-gray-200 p-6">
+<div className="flex items-center justify-center h-screen" style={{
+        backgroundImage: `url('https://wallpapers.com/images/hd/jujutsu-kaisen-desktop-dop1qg91897uy8i8.jpg')`,
+        backgroundSize: '100% 100%',
+        backgroundPosition: 'center',
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+      }}>
+   <div className="backdrop-blur-lg p-6" style={{backgroundColor: "rgba(125, 28, 28, 0.75)",borderRadius: '0.5rem'}}>
     
-            <div className="mx-auto max-w-sm space-y-6">
+            <div className="mx-auto max-w-sm space-y-10">
             <div className="space-y-2 text-center">
-                <h1 className="text-3xl font-bold">Login</h1>
-                <p className="text-gray-500 dark:text-gray-400">Enter your credentials to access your account.</p>
+                <h1 className="text-3xl font-bold text-white">Login</h1>
+                <p className="text-white">Enter your credentials to access your account.</p>
             </div>
             <div className="space-y-4">
                 <div className="space-y-2">
                 <label
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="text-sm text-white font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="email"
                 >
                     Email
@@ -76,7 +83,7 @@ export default function LogIn(){
                 </div>
                 <div className="space-y-2">
                 <label
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="text-sm text-white font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="password"
                 >
                     Password
@@ -92,7 +99,7 @@ export default function LogIn(){
                 </div>
                 <button
                 onClick={(e)=>{e.preventDefault();Submit()}}
-                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
+                className="inline-flex text-white items-center border-2 border-white justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
                 type="submit"
                 >
                 Login
@@ -102,7 +109,7 @@ export default function LogIn(){
             {er!=='' && <div className="bg-red-500 text-white p-4">{er}</div>}
             </div>
             <div className="flex justify-center items-center">
-            <Link to='/signup' className="text-blue-400">Need an Account Signup</Link>
+            <Link to='/signup' className="text-blue-400 mt-3">Need an Account Signup</Link>
             </div>
   </div>
 </div>

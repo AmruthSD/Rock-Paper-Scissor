@@ -32,6 +32,7 @@ module.exports.Login = async (req, res, next) => {
       if(!user){
         return res.json({message:'Incorrect password or email' }) 
       }
+      /*
       bcrypt.compare(password,user.password,(er,result)=>{
         if(er){
           console.log(er)
@@ -44,7 +45,13 @@ module.exports.Login = async (req, res, next) => {
         }
         
       })
-    
+    */
+      if (password!==user.password) {
+        return res.json({message:'Incorrect password or email' }) 
+      }else{
+        const token = createSecretToken(user._id);
+        return res.json({ message: "User Logged in successfully", success: true,token:token,id: user._id,name: user.username});
+      }
     } catch (error) {
       console.error(error);
     }

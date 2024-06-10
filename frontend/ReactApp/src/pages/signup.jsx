@@ -59,23 +59,30 @@ export default function SignUp(){
 
     return(
         <>
-<div className="flex items-center justify-center h-screen">
-  <div className="bg-gray-200 p-6">
+<div className="flex items-center justify-center h-screen" style={{
+        backgroundImage: `url('https://images.alphacoders.com/123/1233065.png')`,
+        backgroundSize: '100% 100%',
+        backgroundPosition: 'center',
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+      }}>
+  <div className="backdrop-blur-lg p-6" style={{backgroundColor: "rgba(19, 20, 41, 0.5)",borderRadius: '0.5rem'}}>
             <div className="mx-auto max-w-sm space-y-6">
             <div className="space-y-2 text-center">
-                <h1 className="text-3xl font-bold">Sign Up</h1>
-                <p className="text-gray-500 dark:text-gray-400">Enter your credentials to create an account.</p>
+                <h1 className="text-3xl text-white font-bold">Sign Up</h1>
+                <p className=" text-white ">Enter your credentials to create an account.</p>
             </div>
             <div className="space-y-4">
                 <div className="space-y-2">
                 <label
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="text-sm text-white  font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="username"
                 >
                     Username
                 </label>
                 <input
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-10   w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     id="username"
                     placeholder="Enter your username"
                     required=""
@@ -85,7 +92,7 @@ export default function SignUp(){
                 </div>
                 <div className="space-y-2">
                 <label
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="text-sm font-medium text-white  leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="email"
                 >
                     Email
@@ -101,7 +108,7 @@ export default function SignUp(){
                 </div>
                 <div className="space-y-2">
                 <label
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="text-sm text-white  font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="password"
                 >
                     Password
@@ -117,7 +124,7 @@ export default function SignUp(){
                 </div>
                 <div className="space-y-2">
                 <label
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="text-sm font-medium text-white  leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="con password"
                 >
                     Confirm Password
@@ -133,7 +140,7 @@ export default function SignUp(){
                 </div>
                 <button
                 onClick={(e)=>{e.preventDefault();Submit();}}
-                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
+                className="inline-flex items-center text-white  justify-center border-2 border-white whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
                 type="submit"
                 >
                 Sign Up
@@ -143,7 +150,7 @@ export default function SignUp(){
             {er!=='' && <div className="bg-red-500 text-white p-4">{er}</div>}
             </div>
             <div className="flex justify-center items-center">
-            <Link to='/login' className="text-blue-400">Have an Account Login</Link>
+            <Link to='/login' className="text-blue-400 mt-3">Have an Account Login</Link>
             </div>
             </div>
             </div>
