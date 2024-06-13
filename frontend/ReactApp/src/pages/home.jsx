@@ -71,6 +71,9 @@ export default function Home(){
                 <button className="my-10 px-10 py-4 flex justify-center items-center text-black  border-2 rounded-lg border-black hover:bg-red-500 " onClick={()=>{navigate('/playrandom')}}>Play Random</button>
                 </div>
                 <div className="flex justify-center items-center">
+                <button className="my-10 px-10 py-4 flex justify-center items-center text-black  border-2 rounded-lg border-black hover:bg-red-500 " onClick={()=>{navigate('/playfriend')}}>Play with Friends</button>
+                </div>
+                <div className="flex justify-center items-center">
                 <button className="mt-32 px-10 py-4 flex justify-center items-center text-black  border-2 rounded-lg border-black hover:bg-red-500" onClick={(e)=>{handelLogout(e)}}>Logout</button>
                 </div>
             </div>

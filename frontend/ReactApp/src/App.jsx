@@ -5,6 +5,7 @@ import SignUp from './pages/signup';
 import LogIn from './pages/login';
 import PlayRandom from './pages/PlayRandom';
 import { Cookies } from 'react-cookie';
+import PlayFriend from './pages/PlayFriend';
 
 function App() {
   function Proctect({children}){
@@ -19,7 +20,7 @@ function App() {
         <Route path='/signup' Component={SignUp}/>
         <Route path='/login' Component={LogIn}/>
         <Route path='/playrandom' element={<Proctect><PlayRandom/></Proctect>}/>
-        
+        <Route path='/playfriend' element={<Proctect><PlayFriend/></Proctect>}/>
       </Routes>
     </>
   )

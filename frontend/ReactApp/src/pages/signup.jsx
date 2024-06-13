@@ -35,9 +35,9 @@ export default function SignUp(){
               if (success) {
                 setSuc(message)
                 const cookies = new Cookies();
-                cookies.set('token',token,{ path: '/',expires: new Date(Date.now() + 3*24*60*60) });
-                cookies.set('id',id,{ path: '/',expires: new Date(Date.now() + 3*24*60*60) });
-                cookies.set('name',name,{ path: '/',expires: new Date(Date.now() + 3*24*60*60) });
+                cookies.set('token',token,{ path: '/',expires: new Date(Date.now() + 3*24*60*60*100) });
+                cookies.set('id',id,{ path: '/',expires: new Date(Date.now() + 3*24*60*60*100) });
+                cookies.set('name',name,{ path: '/',expires: new Date(Date.now() + 3*24*60*60*100) });
                 setEr('')
                 setLoading(false)
                 setTimeout(() => {
