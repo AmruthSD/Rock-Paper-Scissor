@@ -69,18 +69,47 @@ io.on("connection",(socket)=>{
       io.to(playingWithFriends[socket.id].opp_socket_id).emit('priOpponent-Finished',{oppfin:true})
     }
   })
-  socket.on('disconnect',()=>{/*
+  socket.on('disconnect',()=>{
+    if(socket.id in allPlayers){
+      if(waitingPlayers[socket.id]){
+        delete waitingPlayers[socket.id]
+        delete allPlayers[socket.id];
+      }
+      else if(!allPlayers[socket.id].matchDone ){
+        allPlayers[allPlayers[socket.id].opp_socket_id].matchDone=true;
+        io.to(allPlayers[socket.id].opp_socket_id).emit('Result',{youWin:true})
+        UpdateRating(allPlayers[socket.id].opp_id,allPlayers[socket.id].id)
+        delete allPlayers[allPlayers[socket.id].opp_socket_id]
+        delete allPlayers[socket.id];
+      }
+      else if(allPlayers[socket.id].matchDone){
+        delete allPlayers[allPlayers[socket.id].opp_socket_id]
+        delete allPlayers[socket.id];
+      }
+    }
+    else if(socket.id in playingWithFriends){
+      if(playingWithFriends[socket.id].waiting){
+        roomIDs.delete(playingWithFriends[socket.id].roomID)
+        delete roomsPlayers[playingWithFriends[socket.id].roomID]
+        delete playingWithFriends[socket.id]
+      }
+      else if(!playingWithFriends[socket.id].waiting){
+        if(playingWithFriends[socket.id].matchDone){
+          roomIDs.delete(playingWithFriends[socket.id].roomID)
+          delete roomsPlayers[playingWithFriends[socket.id].roomID]
+          delete playingWithFriends[playingWithFriends[socket.id].opp_socket_id]
+          delete playingWithFriends[socket.id]
+        }
+        else{
+          io.to(playingWithFriends[socket.id].opp_socket_id).emit('priResult',{youWin:true})
+          roomIDs.delete(playingWithFriends[socket.id].roomID)
+          delete roomsPlayers[playingWithFriends[socket.id].roomID]
+          delete playingWithFriends[playingWithFriends[socket.id].opp_socket_id]
+          delete playingWithFriends[socket.id]
+        }
+      }
+    }
     
-    if(!allPlayers[socket.id].matchDone && allPlayers[socket.id].opp_socket_id!==undefined && allPlayers[allPlayers[socket.id].opp_socket_id]!==undefined){
-      allPlayers[allPlayers[socket.id].opp_socket_id].matchDone=true;
-      io.to(allPlayers[socket.id].opp_socket_id).emit('Result',{youWin:true})
-      UpdateRating(allPlayers[socket.id].opp_id,allPlayers[socket.id].id)
-    }
-    if(waitingPlayers[socket.id]){
-      delete waitingPlayers[socket.id]
-    }
-    delete allPlayers[socket.id];
-    */
   })
 })
 
@@ -237,6 +266,7 @@ function createRoom(data,socket){
 function joinRoom(data,socket){
   if(!roomIDs.has(data.roomID) || roomsPlayers[data.roomID].length > 1){
     io.to(socket.id).emit('joining-error',{message:"Room is either full or dosent exist"})
+    return;
   }
   playingWithFriends[socket.id]= {id:data.id,name:data.name};
   playingWithFriends[socket.id].roomID = data.roomID
