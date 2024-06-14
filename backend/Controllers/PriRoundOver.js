@@ -50,8 +50,8 @@ async function priRoundOver(data,socket){
       io.to(playingWithFriends[socket.id].opp_socket_id).emit('priResult',{youWin:true})
     }
     else{
-      io.to(socket.id).emit('priRound',{yourScore:playingWithFriends[socket.id].score , oppScore:playingWithFriends[playingWithFriends[socket.id].opp_socket_id].score , oppTurn:playingWithFriends[playingWithFriends[socket.id].opp_socket_id].turn})
-      io.to(playingWithFriends[socket.id].opp_socket_id).emit('priRound',{yourScore:playingWithFriends[playingWithFriends[socket.id].opp_socket_id].score,oppScore:playingWithFriends[socket.id].score,oppTurn:playingWithFriends[socket.id].turn})
+      io.to(socket.id).emit('priRound',{yourScore:playingWithFriends[socket.id].score , oppScore:playingWithFriends[playingWithFriends[socket.id].opp_socket_id].score , oppTurn:playingWithFriends[playingWithFriends[socket.id].opp_socket_id].turn,yourTurn:playingWithFriends[socket.id].turn})
+      io.to(playingWithFriends[socket.id].opp_socket_id).emit('priRound',{yourScore:playingWithFriends[playingWithFriends[socket.id].opp_socket_id].score,oppScore:playingWithFriends[socket.id].score,oppTurn:playingWithFriends[socket.id].turn,yourTurn:playingWithFriends[playingWithFriends[socket.id].opp_socket_id].turn})
     }
     playingWithFriends[socket.id].turn='wait';
     playingWithFriends[playingWithFriends[socket.id].opp_socket_id].turn='wait'

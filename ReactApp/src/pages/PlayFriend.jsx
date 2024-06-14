@@ -27,6 +27,7 @@ export default function PlayFriend(){
     const [oppScore, setOppScore] = useState(0);
     const [oppChoice,setOppChoice] = useState('');
     const [roundLoad,setRoundLoad] = useState(true)
+    const [pastResults,setPastResults] = useState([]);
     useEffect(() => {
         if (!cookies.get('id') || !cookies.get('name')) {
             navigate('/login'); 
@@ -98,6 +99,9 @@ export default function PlayFriend(){
             setUrScore(data.yourScore);
             setOppScore(data.oppScore);
             setOppChoice(data.oppTurn)
+            const newPastHistory = pastResults
+            newPastHistory.push({op:data.oppTurn,my:data.yourTurn})
+            setPastResults(newPastHistory);
             setLoading(false);
             setRoundLoad(false)
             const roundOverTimeOut = setTimeout(() => {
@@ -204,7 +208,7 @@ export default function PlayFriend(){
     }
     return(
         <>
-        <div className="flex text-white items-center justify-center h-screen text-3xl font-bold" style={{
+        <div className="flex flex-col h-full" style={{
         backgroundImage: `url(${GameImg})`,
         backgroundSize: '100% 100%',
         backgroundPosition: 'center',
@@ -214,6 +218,7 @@ export default function PlayFriend(){
         
       }}
       >
+            <div className="flex-grow flex text-white items-center justify-center text-3xl font-bold">
             <div>
             {
                     (result) &&
@@ -287,7 +292,17 @@ export default function PlayFriend(){
                         </div>
                     }
                 </div>
-            
+                </div>
+                <div className="px-10 flex flex-wrap justify-center items-start  space-x-3 text-white text-lg"><span>Your Choices: </span>{pastResults.map((e,i)=>{
+                    return <div key={i}>
+                    {e.my==='Rock'?<img src={Stone} width={100} height={100}/>:   e.my==='Paper'?<img src={Paper} width={100} height={100}/>:<img src={Scissor} width={100} height={100}/>}
+                    </div> 
+                })}</div>
+                <div className="px-10 mb-24 flex flex-wrap  justify-center items-start  space-x-3 text-white  text-lg"><span>Oppo Choices: </span>{pastResults.map((e,i)=>{
+                    return <div key={i}>
+                    {e.op==='Rock'?<img src={Stone} width={100} height={100}/>:   e.op==='Paper'?<img src={Paper} width={100} height={100}/>:<img src={Scissor} width={100} height={100}/>}
+                    </div> 
+                })}</div>
         </div>
         </>
     )

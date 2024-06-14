@@ -53,8 +53,8 @@ async function RoundOver(data,socket){
       await UpdateRating(allPlayers[socket.id].opp_id,allPlayers[socket.id].id)
     }
     else{
-      io.to(socket.id).emit('Round',{yourScore:allPlayers[socket.id].score , oppScore:allPlayers[allPlayers[socket.id].opp_socket_id].score , oppTurn:allPlayers[allPlayers[socket.id].opp_socket_id].turn})
-      io.to(allPlayers[socket.id].opp_socket_id).emit('Round',{yourScore:allPlayers[allPlayers[socket.id].opp_socket_id].score,oppScore:allPlayers[socket.id].score,oppTurn:allPlayers[socket.id].turn})
+      io.to(socket.id).emit('Round',{yourScore:allPlayers[socket.id].score , oppScore:allPlayers[allPlayers[socket.id].opp_socket_id].score , oppTurn:allPlayers[allPlayers[socket.id].opp_socket_id].turn , yourTurn:allPlayers[socket.id].turn})
+      io.to(allPlayers[socket.id].opp_socket_id).emit('Round',{yourScore:allPlayers[allPlayers[socket.id].opp_socket_id].score,oppScore:allPlayers[socket.id].score,oppTurn:allPlayers[socket.id].turn,yourTurn:allPlayers[allPlayers[socket.id].opp_socket_id].turn})
     }
     allPlayers[socket.id].turn='wait';
     allPlayers[allPlayers[socket.id].opp_socket_id].turn='wait'
