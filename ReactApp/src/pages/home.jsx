@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {Cookies} from 'react-cookie'
 import {useNavigate} from 'react-router-dom'
 import axios from "axios";
-import HomeImg from '../assets/home.jpg'
+import HomeImg from '../assets/home1.jpg'
 export default function Home(){
     const [userData,setData] =useState({}) 
     const [loading,setLoading]=useState(false)
@@ -55,7 +55,7 @@ export default function Home(){
         height: '100vh',
         overflow: 'hidden',
       }}>
-            <div className="ml-96">
+            <div className="">
                 <div className="flex justify-center items-center text-black  font-black text-5xl pb-11">
                     Welome To RPS
                 </div>
@@ -68,13 +68,13 @@ export default function Home(){
                     
                 </div>
                 <div className="flex justify-center items-center">
-                <button className="my-10 px-10 py-4 flex justify-center items-center text-black  border-2 rounded-lg border-black hover:bg-red-500 " onClick={()=>{navigate('/playrandom')}}>Play Random</button>
+                <button className="my-10 px-10 py-4 flex justify-center items-center text-white bg-black  border-2 rounded-lg border-black hover:bg-rose-950 " onClick={()=>{navigate('/playrandom')}}>Play Random</button>
                 </div>
                 <div className="flex justify-center items-center">
-                <button className="my-10 px-10 py-4 flex justify-center items-center text-black  border-2 rounded-lg border-black hover:bg-red-500 " onClick={()=>{navigate('/playfriend')}}>Play with Friends</button>
+                <button className="my-10 px-10 py-4 flex justify-center items-center text-white bg-black   border-2 rounded-lg border-black hover:bg-rose-950 " onClick={()=>{navigate('/playfriend')}}>Play with Friends</button>
                 </div>
                 <div className="flex justify-center items-center">
-                <button className="mt-32 px-10 py-4 flex justify-center items-center text-black  border-2 rounded-lg border-black hover:bg-red-500" onClick={(e)=>{handelLogout(e)}}>Logout</button>
+                <button className="mt-32 px-10 py-4 flex justify-center items-center text-white bg-black   border-2 rounded-lg border-black hover:bg-sky-950" onClick={(e)=>{handelLogout(e)}}>Logout</button>
                 </div>
             </div>
         </div>

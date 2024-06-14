@@ -2,7 +2,7 @@ import {useRef,useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Cookies } from "react-cookie";
-import SignupImg from '../assets/signup.png'
+import SignupImg from '../assets/signup1.jpg'
 
 export default function SignUp(){
     const username =  useRef();
@@ -67,7 +67,7 @@ export default function SignUp(){
         height: '100vh',
         overflow: 'hidden',
       }}>
-  <div className="backdrop-blur-lg p-6" style={{backgroundColor: "rgba(19, 20, 41, 0.5)",borderRadius: '0.5rem'}}>
+  <div className="backdrop-blur-lg p-6" style={{backgroundColor: "rgba(242, 103, 34, 0.5)",borderRadius: '0.5rem'}}>
             <div className="mx-auto max-w-sm space-y-6">
             <div className="space-y-2 text-center">
                 <h1 className="text-3xl text-white font-bold">Sign Up</h1>
@@ -150,7 +150,7 @@ export default function SignUp(){
             {er!=='' && <div className="bg-red-500 text-white p-4">{er}</div>}
             </div>
             <div className="flex justify-center items-center">
-            <Link to='/login' className="text-blue-400 mt-3">Have an Account Login</Link>
+            <Link to='/login' className="text-white mt-3">Have an Account <span className="text-blue-400">Login</span></Link>
             </div>
             </div>
             </div>

@@ -2,8 +2,8 @@ import React, { useState, useEffect,useRef } from "react";
 import { socket } from "../socket.js";
 import { Cookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
-
-import GameImg from '../assets/Game.jpg'
+import WaitImg from '../assets/waiting1.jpg'
+import GameImg from '../assets/Game1.png'
 import Stone from '../assets/stone.png'
 import Scissor from '../assets/scissors.png'
 import Paper from '../assets/paper.png'
@@ -154,26 +154,52 @@ export default function PlayFriend(){
     if(state==='Initial'){
         return(
             <>
-                <button onClick={createRoom}>Create Room</button>
-                <label
-                    for="email"
-                >
-                    RoomID
-                </label>
-                <input
-                    ref={joiningRoomID}
-                    placeholder="Enter the roomID"
-                />
-                <button onClick={joinRoom}>Join Room</button>
-                <div>{errorMessage}</div>
+            <div className="" style={{
+        backgroundImage: `url(${WaitImg})`,
+        backgroundSize: '100% 100%',
+        backgroundPosition: 'center',
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+        
+      }}>   <div className="flex text-black text-3xl font-bold items-center justify-center h-screen mx-28">
+                <div className="grow flex-1 flex flex-col justify-center items-center my-10">
+                    <button onClick={createRoom} className="p-6 text-white bg-black  border-2 rounded-lg border-black hover:bg-rose-950 ">Create New Room</button>
+                </div>
+                <div className="grow flex-1 flex flex-col justify-center items-center space-y-3 my-10">
+                    <div>
+                    <input
+                        ref={joiningRoomID}
+                        placeholder=" Enter the Room ID to Join"
+                    />
+                    </div>
+                <button onClick={joinRoom} className="p-3 text-white bg-black text-lg border-2 rounded-lg border-black hover:bg-rose-950 ">Join Room</button>
+                <div className="text-red-600">{errorMessage}</div>
+                </div>
+            </div>   
+            </div>
             </>
         )
     }
     if(state==='Waiting'){
         return(
             <>
-                Waiting for Friend ask them to enter {roomID} as the room id
-            </>
+            <div className="flex items-center justify-center h-screen" style={{
+        backgroundImage: `url(${WaitImg})`,
+        backgroundSize: '100% 100%',
+        backgroundPosition: 'center',
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+      }}>
+                <div >
+                    <div className="flex-col space-y-3 justify-center items-center text-black font-black text-3xl pb-11 mb-32">
+                        <div>Waiting For Friend .......</div>
+                        <div>Ask them to Enter {roomID} as the Room ID</div>
+                    </div>
+                </div>
+        </div>
+        </>
         )
     }
     return(

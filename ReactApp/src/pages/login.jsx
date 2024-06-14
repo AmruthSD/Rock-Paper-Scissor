@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {Cookies} from 'react-cookie';
 import Img from '../assets/stone.png'
-import LoginImg from '../assets/login.jpg'
+import LoginImg from '../assets/login1.png'
 export default function LogIn(){
     const email = useRef()
     const password = useRef()
@@ -59,7 +59,7 @@ export default function LogIn(){
         height: '100vh',
         overflow: 'hidden',
       }}>
-   <div className="backdrop-blur-lg p-6" style={{backgroundColor: "rgba(125, 28, 28, 0.75)",borderRadius: '0.5rem'}}>
+   <div className="backdrop-blur-sm p-6" style={{backgroundColor: "rgba(242, 103, 34, 0.5)",borderRadius: '0.5rem'}}>
     
             <div className="mx-auto max-w-sm space-y-10">
             <div className="space-y-2 text-center">
@@ -111,7 +111,7 @@ export default function LogIn(){
             {er!=='' && <div className="bg-red-500 text-white p-4">{er}</div>}
             </div>
             <div className="flex justify-center items-center">
-            <Link to='/signup' className="text-blue-400 mt-3">Need an Account Signup</Link>
+            <Link to='/signup' className="text-white mt-3">Need an Account <span className="text-blue-400">Signup</span></Link>
             </div>
   </div>
 </div>

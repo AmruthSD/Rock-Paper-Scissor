@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { socket } from "../socket.js";
 import { Cookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
-import WaitImg from '../assets/waiting.jpg'
-import GameImg from '../assets/Game.jpg'
+import WaitImg from '../assets/waiting1.jpg'
+import GameImg from '../assets/Game1.png'
 import Stone from '../assets/stone.png'
 import Scissor from '../assets/scissors.png'
 import Paper from '../assets/paper.png'
@@ -127,7 +127,7 @@ export default function PlayRandom() {
         overflow: 'hidden',
       }}>
                 <div >
-                    <div className="flex justify-center items-center text-white font-black text-5xl pb-11 mb-32">
+                    <div className="flex justify-center items-center text-black font-black text-5xl pb-11 mb-32">
                         Waiting For Opponent .......
                     </div>
                 </div>
