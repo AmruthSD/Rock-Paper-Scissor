@@ -16,7 +16,7 @@ export default function Home(){
         console.log(cookies.get('name'))
         const getData = async()=>{
         const res = await axios.post(
-            `http://localhost:4000/pro`,
+            import.meta.env.VITE_backend_url+`/pro`,
             {id:cookies.get('id')},
             { withCredentials: true }
           );

@@ -15,7 +15,7 @@ export default function LogIn(){
         setLoading(true)
         try {
             const { data } = await axios.post(
-                "http://localhost:4000/login",
+                import.meta.env.VITE_backend_url+"/login",
                 {
                     email: email.current.value, 
                     password: password.current.value,
