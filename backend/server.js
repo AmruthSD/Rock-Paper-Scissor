@@ -9,22 +9,23 @@ const http = require('http')
 const server = http.createServer(app);
 const socketIo = require('socket.io');
 const User = require('./Models/UserModel')
+const {MONGODB_URL,PORT,FRONTEND_URL} = process.env;
 const io = socketIo(server,{
   cors: {
-    origin: ["http://localhost:5173"],
+    origin: [FRONTEND_URL],
     credentials: true,
     methods: ["GET", "POST"],
   }
 });
 
 
-const {MONGODB_URL,PORT} = process.env;
+
 const X = require('./Middlewares/AuthMiddleware')
 mongoose.connect(MONGODB_URL).then(()=>console.log("DB connected")).catch(e=>console.log(e))
 
 app.use(
     cors({
-      origin: ["http://localhost:5173"],
+      origin: [FRONTEND_URL],
       methods: ["GET", "POST", "PUT", "DELETE"],
       credentials: true
     })
