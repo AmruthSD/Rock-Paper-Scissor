@@ -7,7 +7,8 @@ async function Disconnect(socket){
           delete allPlayers[socket.id];
         }
         else if(!allPlayers[socket.id].matchDone ){
-          allPlayers[allPlayers[socket.id].opp_socket_id].matchDone=true;
+          if(allPlayers[allPlayers[socket.id].opp_socket_id]!==undefined)
+            allPlayers[allPlayers[socket.id].opp_socket_id].matchDone=true;
           io.to(allPlayers[socket.id].opp_socket_id).emit('Result',{youWin:true})
           await UpdateRating(allPlayers[socket.id].opp_id,allPlayers[socket.id].id)
           delete allPlayers[allPlayers[socket.id].opp_socket_id]
