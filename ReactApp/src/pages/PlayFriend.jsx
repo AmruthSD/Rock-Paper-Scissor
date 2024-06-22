@@ -158,6 +158,11 @@ export default function PlayFriend(){
     if(state==='Initial'){
         return(
             <>
+
+<div className="relative min-h-screen">
+      <button onClick={(e)=>{e.preventDefault();navigate('/');}} className="fixed top-0 right-0 m-4 p-2  text-white bg-black text-lg border-2 rounded-lg border-black hover:bg-rose-950 ">
+        Home
+      </button>
             <div className="" style={{
         backgroundImage: `url(${WaitImg})`,
         backgroundSize: '100% 100%',
@@ -166,7 +171,9 @@ export default function PlayFriend(){
         height: '100vh',
         overflow: 'hidden',
         
-      }}>   <div className="flex text-black text-3xl font-bold items-center justify-center h-screen mx-28">
+      }}>   
+      
+      <div className="flex text-black text-3xl font-bold items-center justify-center h-screen mx-28">
                 <div className="grow flex-1 flex flex-col justify-center items-center my-10">
                     <button onClick={createRoom} className="p-6 text-white bg-black  border-2 rounded-lg border-black hover:bg-rose-950 ">Create New Room</button>
                 </div>
@@ -182,12 +189,17 @@ export default function PlayFriend(){
                 </div>
             </div>   
             </div>
+            </div>
             </>
         )
     }
     if(state==='Waiting'){
         return(
             <>
+            <div className="relative min-h-screen">
+      <button onClick={(e)=>{e.preventDefault();navigate('/');}} className="fixed top-0 right-0 m-4 p-2  text-white bg-black text-lg border-2 rounded-lg border-black hover:bg-rose-950 ">
+        Home
+      </button>
             <div className="flex items-center justify-center h-screen" style={{
         backgroundImage: `url(${WaitImg})`,
         backgroundSize: '100% 100%',
@@ -202,6 +214,7 @@ export default function PlayFriend(){
                         <div>Ask them to Enter {roomID} as the Room ID</div>
                     </div>
                 </div>
+        </div>
         </div>
         </>
         )

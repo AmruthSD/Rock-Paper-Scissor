@@ -123,6 +123,11 @@ export default function PlayRandom() {
     
     if (waiting) {
         return (<>
+
+<div className="relative min-h-screen">
+      <button onClick={(e)=>{e.preventDefault();navigate('/');}} className="fixed top-0 right-0 m-4 p-2  text-white bg-black text-lg border-2 rounded-lg border-black hover:bg-rose-950 ">
+        Home
+      </button>
             <div className="flex items-center justify-center h-screen" style={{
         backgroundImage: `url(${WaitImg})`,
         backgroundSize: '100% 100%',
@@ -130,12 +135,13 @@ export default function PlayRandom() {
         width: '100vw',
         height: '100vh',
         overflow: 'hidden',
-      }}>
+      }}>       
                 <div >
                     <div className="flex justify-center items-center text-black font-black text-5xl pb-11 mb-32">
                         Waiting For Opponent .......
                     </div>
                 </div>
+        </div>
         </div>
         </>);
     }
