@@ -24,6 +24,7 @@ export default function PlayRandom() {
     const [oppChoice,setOppChoice] = useState('');
     const [roundLoad,setRoundLoad] = useState(true)
     const [pastResults,setPastResults] = useState([]);
+    const [messages,setMessages] = useState([])
     useEffect(() => {
         if (!cookies.get('id') || !cookies.get('name')) {
             navigate('/login'); 
@@ -232,16 +233,29 @@ export default function PlayRandom() {
                     }
                 </div>
                 </div>
-                <div className="px-10 flex justify-center items-start  space-x-3 text-white text-lg"><span>Your Choices: </span>{pastResults.map((e,i)=>{
-                    return <div key={i}>
-                    {e.my==='Rock'?<img src={Stone} width={100} height={100}/>:   e.my==='Paper'?<img src={Paper} width={100} height={100}/>:<img src={Scissor} width={100} height={100}/>}
-                    </div> 
-                })}</div>
-                <div className="px-10 mb-24 flex justify-center items-start  space-x-3 text-white  text-lg"><span>Oppo Choices: </span>{pastResults.map((e,i)=>{
-                    return <div key={i}>
+                <div className="flex">
+                <div className="w-1/2 p-10 flex" >
+                    <div className=" flex-col ustify-center items-start text-white text-lg space-y-2">
+                        <div className="h-1/2">Your Choices: </div>
+                        <div className="h-1/2">Oppo Choices: </div>
+                    </div>
+                    {pastResults.map((e,i)=>{
+                        return (<div className=" flex-col space-y-2">
+                            <div key={i}>
+                        {e.my==='Rock'?<img src={Stone} width={100} height={100}/>:   e.my==='Paper'?<img src={Paper} width={100} height={100}/>:<img src={Scissor} width={100} height={100}/>}
+                        </div>
+                        <div key={i}>
                     {e.op==='Rock'?<img src={Stone} width={100} height={100}/>:   e.op==='Paper'?<img src={Paper} width={100} height={100}/>:<img src={Scissor} width={100} height={100}/>}
-                    </div> 
-                })}</div>
+                    </div>
+                        </div>)
+                    })}
+                
+                </div>
+                <div className="w-1/2">
+                    Messages
+                </div>
+                
+                </div>
         </div>
         </>
     );
