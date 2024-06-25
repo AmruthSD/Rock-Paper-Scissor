@@ -28,6 +28,18 @@ export default function PlayFriend(){
     const [oppChoice,setOppChoice] = useState('');
     const [roundLoad,setRoundLoad] = useState(true)
     const [pastResults,setPastResults] = useState([]);
+    const [messages,setMessages] = useState([])
+    const newMessageRef = useRef()
+
+    function sendMessage(){
+        setLoading(true)
+        const newMes = newMessageRef.current.value;
+        newMessageRef.current.value = ''
+        const messObj = {byMe:1,text:newMes}
+        socket.emit('Pmessage',newMes);
+        setMessages(prevmessages=>[...prevmessages,messObj])
+        setLoading(false)
+    }
     useEffect(() => {
         if (!cookies.get('id') || !cookies.get('name')) {
             navigate('/login'); 
@@ -116,14 +128,24 @@ export default function PlayFriend(){
             
         };
 
+        const receiveMessage = (data) =>{
+            setLoading(true)
+            const newMes = data
+            const messObj = {byMe:0,text:newMes}
+            setMessages(prevmessages=>[...prevmessages,messObj])
+            setLoading(false)
+        }
+
         socket.on('priResult', handelResult);
         socket.on('priOpponent-Finished', handelOppFin);
         socket.on('priRound', handelRound);
+        socket.on('receiveMess',receiveMessage)
 
         return () => {
             socket.off('priResult', handelResult);
             socket.off('priOpponent-Finished', handelOppFin);
             socket.off('priRound', handelRound);
+            socket.off('receiveMess',receiveMessage)
         };
     }, []);
 
@@ -158,6 +180,11 @@ export default function PlayFriend(){
     if(state==='Initial'){
         return(
             <>
+
+<div className="relative min-h-screen">
+      <button onClick={(e)=>{e.preventDefault();navigate('/');}} className="fixed top-0 right-0 m-4 p-2  text-white bg-black text-lg border-2 rounded-lg border-black hover:bg-rose-950 ">
+        Home
+      </button>
             <div className="" style={{
         backgroundImage: `url(${WaitImg})`,
         backgroundSize: '100% 100%',
@@ -166,7 +193,9 @@ export default function PlayFriend(){
         height: '100vh',
         overflow: 'hidden',
         
-      }}>   <div className="flex text-black text-3xl font-bold items-center justify-center h-screen mx-28">
+      }}>   
+      
+      <div className="flex text-black text-3xl font-bold items-center justify-center h-screen mx-28">
                 <div className="grow flex-1 flex flex-col justify-center items-center my-10">
                     <button onClick={createRoom} className="p-6 text-white bg-black  border-2 rounded-lg border-black hover:bg-rose-950 ">Create New Room</button>
                 </div>
@@ -182,12 +211,17 @@ export default function PlayFriend(){
                 </div>
             </div>   
             </div>
+            </div>
             </>
         )
     }
     if(state==='Waiting'){
         return(
             <>
+            <div className="relative min-h-screen">
+      <button onClick={(e)=>{e.preventDefault();navigate('/');}} className="fixed top-0 right-0 m-4 p-2  text-white bg-black text-lg border-2 rounded-lg border-black hover:bg-rose-950 ">
+        Home
+      </button>
             <div className="flex items-center justify-center h-screen" style={{
         backgroundImage: `url(${WaitImg})`,
         backgroundSize: '100% 100%',
@@ -203,18 +237,19 @@ export default function PlayFriend(){
                     </div>
                 </div>
         </div>
+        </div>
         </>
         )
     }
     return(
         <>
-        <div className="flex flex-col h-full" style={{
+        <div className="flex flex-col h-full overflow-y-auto" style={{
         backgroundImage: `url(${GameImg})`,
         backgroundSize: '100% 100%',
         backgroundPosition: 'center',
         width: '100vw',
         height: '100vh',
-        overflow: 'hidden',
+        
         
       }}
       >
@@ -293,16 +328,44 @@ export default function PlayFriend(){
                     }
                 </div>
                 </div>
-                <div className="px-10 flex flex-wrap justify-center items-start  space-x-3 text-white text-lg"><span>Your Choices: </span>{pastResults.map((e,i)=>{
-                    return <div key={i}>
-                    {e.my==='Rock'?<img src={Stone} width={100} height={100}/>:   e.my==='Paper'?<img src={Paper} width={100} height={100}/>:<img src={Scissor} width={100} height={100}/>}
-                    </div> 
-                })}</div>
-                <div className="px-10 mb-24 flex flex-wrap  justify-center items-start  space-x-3 text-white  text-lg"><span>Oppo Choices: </span>{pastResults.map((e,i)=>{
-                    return <div key={i}>
+                <div className="flex-grow flex">
+                <div className="w-1/2 h-full p-10 flex" >
+                    <div className=" flex-col ustify-center items-start text-white text-lg space-y-2">
+                        <div className="h-1/2">Your Choices: </div>
+                        <div className="h-1/2">Oppo Choices: </div>
+                    </div>
+                    {pastResults.map((e,i)=>{
+                        return (<div className=" flex-col space-y-2">
+                            <div key={i}>
+                        {e.my==='Rock'?<img src={Stone} width={100} height={100}/>:   e.my==='Paper'?<img src={Paper} width={100} height={100}/>:<img src={Scissor} width={100} height={100}/>}
+                        </div>
+                        <div key={i}>
                     {e.op==='Rock'?<img src={Stone} width={100} height={100}/>:   e.op==='Paper'?<img src={Paper} width={100} height={100}/>:<img src={Scissor} width={100} height={100}/>}
-                    </div> 
-                })}</div>
+                    </div>
+                        </div>)
+                    })}
+                
+                </div>
+                <div className="w-1/2 flex-col p-10 space-y-2 text-white h-full">
+                    <div className=" text-lg">Messages</div>
+                    <div className="flex-grow p-4 max-h-48 overflow-y-auto " >
+                        {messages.slice().reverse().map((e,i)=>{
+                            return(
+                                <div key={i} className={e.byMe?' text-green-500':' text-red-500'} >{e.text}</div>
+                            )
+                        })}
+                    </div>
+                    <div>
+                        <input
+                            ref={newMessageRef}
+                            placeholder=" Enter the new Message"
+                            className=" text-black"
+                        />
+                        <button onClick={(e)=>{e.preventDefault();sendMessage()}}>Send</button>
+                    </div>
+                </div>
+                
+                </div>
         </div>
         </>
     )

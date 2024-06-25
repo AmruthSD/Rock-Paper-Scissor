@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { socket } from "../socket.js";
 import { Cookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,7 @@ import Paper from '../assets/paper.png'
 
 export default function PlayRandom() {
     const navigate = useNavigate();
+    
     const [waiting, setWaiting] = useState(true);
     const cookies = new Cookies();
     const [oppData, setOppData] = useState({});
@@ -24,6 +25,19 @@ export default function PlayRandom() {
     const [oppChoice,setOppChoice] = useState('');
     const [roundLoad,setRoundLoad] = useState(true)
     const [pastResults,setPastResults] = useState([]);
+    const [messages,setMessages] = useState([])
+    const newMessageRef = useRef()
+    
+
+    function sendMessage(){
+        setLoading(true)
+        const newMes = newMessageRef.current.value;
+        newMessageRef.current.value = ''
+        const messObj = {byMe:1,text:newMes}
+        socket.emit('Rmessage',newMes);
+        setMessages(prevmessages=>[...prevmessages,messObj])
+        setLoading(false)
+    }
     useEffect(() => {
         if (!cookies.get('id') || !cookies.get('name')) {
             navigate('/login'); 
@@ -64,7 +78,7 @@ export default function PlayRandom() {
             }, 3000);
             return () => clearTimeout(timerId);
         };
-
+        
         const handelOppFin = (data) => {
             setLoading(true);
             setOppTurn(data.oppfin);
@@ -94,16 +108,26 @@ export default function PlayRandom() {
             
         };
 
+        const receiveMessage = (data) =>{
+            setLoading(true)
+            const newMes = data
+            const messObj = {byMe:0,text:newMes}
+            setMessages(prevmessages=>[...prevmessages,messObj])
+            setLoading(false)
+        }
+
         socket.on('Stop-Waiting', handelStopWaiting);
         socket.on('Result', handelResult);
         socket.on('Opponent-Finished', handelOppFin);
         socket.on('Round', handelRound);
+        socket.on('receiveMess',receiveMessage)
 
         return () => {
             socket.off('Stop-Waiting', handelStopWaiting);
             socket.off('Result', handelResult);
             socket.off('Opponent-Finished', handelOppFin);
             socket.off('Round', handelRound);
+            socket.off('receiveMess',receiveMessage)
         };
     }, []);
 
@@ -114,6 +138,7 @@ export default function PlayRandom() {
             setLoading(false);
         }
     }, [myTurn]);
+    
 
     if (loading) {
         return (<>
@@ -123,6 +148,11 @@ export default function PlayRandom() {
     
     if (waiting) {
         return (<>
+
+<div className="relative min-h-screen">
+      <button onClick={(e)=>{e.preventDefault();navigate('/');}} className="fixed top-0 right-0 m-4 p-2  text-white bg-black text-lg border-2 rounded-lg border-black hover:bg-rose-950 ">
+        Home
+      </button>
             <div className="flex items-center justify-center h-screen" style={{
         backgroundImage: `url(${WaitImg})`,
         backgroundSize: '100% 100%',
@@ -130,24 +160,25 @@ export default function PlayRandom() {
         width: '100vw',
         height: '100vh',
         overflow: 'hidden',
-      }}>
+      }}>       
                 <div >
                     <div className="flex justify-center items-center text-black font-black text-5xl pb-11 mb-32">
                         Waiting For Opponent .......
                     </div>
                 </div>
         </div>
+        </div>
         </>);
     }
     return (
         <>
-        <div className="flex flex-col h-full" style={{
+        <div className="flex flex-col h-full overflow-y-auto" style={{
         backgroundImage: `url(${GameImg})`,
         backgroundSize: '100% 100%',
         backgroundPosition: 'center',
         width: '100vw',
         height: '100vh',
-        overflow: 'hidden',
+        
         
       }}
       >
@@ -226,16 +257,44 @@ export default function PlayRandom() {
                     }
                 </div>
                 </div>
-                <div className="px-10 flex justify-center items-start  space-x-3 text-white text-lg"><span>Your Choices: </span>{pastResults.map((e,i)=>{
-                    return <div key={i}>
-                    {e.my==='Rock'?<img src={Stone} width={100} height={100}/>:   e.my==='Paper'?<img src={Paper} width={100} height={100}/>:<img src={Scissor} width={100} height={100}/>}
-                    </div> 
-                })}</div>
-                <div className="px-10 mb-24 flex justify-center items-start  space-x-3 text-white  text-lg"><span>Oppo Choices: </span>{pastResults.map((e,i)=>{
-                    return <div key={i}>
+                <div className="flex-grow flex">
+                <div className="w-1/2 h-full p-10 flex" >
+                    <div className=" flex-col ustify-center items-start text-white text-lg space-y-2">
+                        <div className="h-1/2">Your Choices: </div>
+                        <div className="h-1/2">Oppo Choices: </div>
+                    </div>
+                    {pastResults.map((e,i)=>{
+                        return (<div className=" flex-col space-y-2">
+                            <div key={i}>
+                        {e.my==='Rock'?<img src={Stone} width={100} height={100}/>:   e.my==='Paper'?<img src={Paper} width={100} height={100}/>:<img src={Scissor} width={100} height={100}/>}
+                        </div>
+                        <div key={i}>
                     {e.op==='Rock'?<img src={Stone} width={100} height={100}/>:   e.op==='Paper'?<img src={Paper} width={100} height={100}/>:<img src={Scissor} width={100} height={100}/>}
-                    </div> 
-                })}</div>
+                    </div>
+                        </div>)
+                    })}
+                
+                </div>
+                <div className="w-1/2 flex-col p-10 space-y-2 text-white h-full">
+                    <div className=" text-lg">Messages</div>
+                    <div className="flex-grow p-4 max-h-48 overflow-y-auto " >
+                        {messages.slice().reverse().map((e,i)=>{
+                            return(
+                                <div key={i} className={e.byMe?' text-green-500':' text-red-500'} >{e.text}</div>
+                            )
+                        })}
+                    </div>
+                    <div>
+                        <input
+                            ref={newMessageRef}
+                            placeholder=" Enter the new Message"
+                            className=" text-black"
+                        />
+                        <button onClick={(e)=>{e.preventDefault();sendMessage()}}>Send</button>
+                    </div>
+                </div>
+                
+                </div>
         </div>
         </>
     );

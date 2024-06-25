@@ -22,7 +22,7 @@ export default function SignUp(){
 
             }
             const { data } = await axios.post(
-                "http://localhost:4000/signup",
+                import.meta.env.VITE_backend_url+"/signup",
                 {
                     email: email.current.value, 
                     password: password.current.value,

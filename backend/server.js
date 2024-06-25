@@ -22,7 +22,7 @@ const io = socketIo(server,{
 
 const X = require('./Middlewares/AuthMiddleware')
 mongoose.connect(MONGODB_URL).then(()=>console.log("DB connected")).catch(e=>console.log(e))
-
+const {Leaderboard} = require('./Controllers/LeaderBoard.js')
 app.use(
     cors({
       origin: [FRONTEND_URL],
@@ -36,7 +36,7 @@ app.use(cookieParser())
 app.use(express.json());
 app.use('/',authRoute);
 app.use('/pro',X.userVerification)
-
+app.get('/leader',Leaderboard)
 
 
 const waitingPlayers ={};
@@ -66,6 +66,12 @@ io.on("connection",(socket)=>{
   socket.on('public-connect',(data)=>ConnectPlayers(socket,data))
   socket.on('create-room',(data)=>createRoom(data,socket))
   socket.on('join-room',(data)=>joinRoom(data,socket))
+  socket.on('Rmessage',(data)=>{
+    io.to(allPlayers[socket.id].opp_socket_id).emit('receiveMess',data)
+  })
+  socket.on('Pmessage',(data)=>{
+    io.to(playingWithFriends[socket.id].opp_socket_id).emit('receiveMess',data)
+  })
   socket.on('Turn',(data)=>{
     allPlayers[socket.id].turn = data.turn;
     if(!(allPlayers[allPlayers[socket.id].opp_socket_id].turn==='wait')){
