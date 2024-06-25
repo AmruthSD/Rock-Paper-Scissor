@@ -22,7 +22,7 @@ const io = socketIo(server,{
 
 const X = require('./Middlewares/AuthMiddleware')
 mongoose.connect(MONGODB_URL).then(()=>console.log("DB connected")).catch(e=>console.log(e))
-
+const {Leaderboard} = require('./Controllers/LeaderBoard.js')
 app.use(
     cors({
       origin: [FRONTEND_URL],
@@ -36,7 +36,7 @@ app.use(cookieParser())
 app.use(express.json());
 app.use('/',authRoute);
 app.use('/pro',X.userVerification)
-
+app.get('/leader',Leaderboard)
 
 
 const waitingPlayers ={};

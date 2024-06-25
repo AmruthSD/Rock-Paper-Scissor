@@ -47,13 +47,13 @@ export default function Home(){
     return(
         <>
        
-        <div className="flex items-center justify-center h-screen" style={{
+        <div className="flex items-center justify-center h-full" style={{
         backgroundImage: `url(${HomeImg})`,
         backgroundSize: '100% 100%',
         backgroundPosition: 'center',
         width: '100vw',
         height: '100vh',
-        overflow: 'hidden',
+        
       }}>
             <div className="">
                 <div className="flex justify-center items-center text-black  font-black text-5xl pb-11">
@@ -63,18 +63,21 @@ export default function Home(){
                     <div>UserName: {userData.username}</div>
                     
                 </div>
-                <div className="px-10 py-4 text-3xl flex justify-center items-center text-black   ">
+                <div className="px-10 py-4 pb-10 text-3xl flex justify-center items-center text-black   ">
                 <div>Rating: {userData.rating}</div>
                     
                 </div>
-                <div className="flex justify-center items-center">
-                <button className="my-10 px-10 py-4 flex justify-center items-center text-white bg-black  border-2 rounded-lg border-black hover:bg-rose-950 " onClick={()=>{navigate('/playrandom')}}>Play Random</button>
+                <div className="flex justify-center items-center pb-10">
+                <button className="p-5 flex justify-center items-center text-white bg-black  border-2 rounded-lg border-black hover:bg-rose-950 " onClick={()=>{navigate('/playrandom')}}>Play Random</button>
+                </div>
+                <div className="flex justify-center items-center pb-10">
+                <button className="p-5 flex justify-center items-center text-white bg-black   border-2 rounded-lg border-black hover:bg-rose-950 " onClick={()=>{navigate('/playfriend')}}>Play with Friends</button>
+                </div>
+                <div className="flex justify-center items-center pb-10">
+                <button className="p-5 flex justify-center items-center text-white bg-black   border-2 rounded-lg border-black hover:bg-rose-950 " onClick={()=>{navigate('/leaderboard')}}>Leaderboard</button>
                 </div>
                 <div className="flex justify-center items-center">
-                <button className="my-10 px-10 py-4 flex justify-center items-center text-white bg-black   border-2 rounded-lg border-black hover:bg-rose-950 " onClick={()=>{navigate('/playfriend')}}>Play with Friends</button>
-                </div>
-                <div className="flex justify-center items-center">
-                <button className="mt-32 px-10 py-4 flex justify-center items-center text-white bg-black   border-2 rounded-lg border-black hover:bg-sky-950" onClick={(e)=>{handelLogout(e)}}>Logout</button>
+                <button className="p-5 flex justify-center items-center text-white bg-black   border-2 rounded-lg border-black hover:bg-sky-950" onClick={(e)=>{handelLogout(e)}}>Logout</button>
                 </div>
             </div>
         </div>
