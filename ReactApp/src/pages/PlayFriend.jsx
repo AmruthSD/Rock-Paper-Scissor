@@ -243,13 +243,13 @@ export default function PlayFriend(){
     }
     return(
         <>
-        <div className="flex flex-col h-full" style={{
+        <div className="flex flex-col h-full overflow-y-auto" style={{
         backgroundImage: `url(${GameImg})`,
         backgroundSize: '100% 100%',
         backgroundPosition: 'center',
         width: '100vw',
         height: '100vh',
-        overflow: 'hidden',
+        
         
       }}
       >
@@ -328,8 +328,8 @@ export default function PlayFriend(){
                     }
                 </div>
                 </div>
-                <div className="flex">
-                <div className="w-1/2 p-10 flex" >
+                <div className="flex-grow flex">
+                <div className="w-1/2 h-full p-10 flex" >
                     <div className=" flex-col ustify-center items-start text-white text-lg space-y-2">
                         <div className="h-1/2">Your Choices: </div>
                         <div className="h-1/2">Oppo Choices: </div>
@@ -346,12 +346,12 @@ export default function PlayFriend(){
                     })}
                 
                 </div>
-                <div className="w-1/2">
-                    <div>Messages</div>
-                    <div>
-                        {messages.map((e,i)=>{
+                <div className="w-1/2 flex-col p-10 space-y-2 text-white h-full">
+                    <div className=" text-lg">Messages</div>
+                    <div className="flex-grow p-4 max-h-48 overflow-y-auto " >
+                        {messages.slice().reverse().map((e,i)=>{
                             return(
-                                <div key={i}>{e.text}</div>
+                                <div key={i} className={e.byMe?' text-green-500':' text-red-500'} >{e.text}</div>
                             )
                         })}
                     </div>
@@ -359,6 +359,7 @@ export default function PlayFriend(){
                         <input
                             ref={newMessageRef}
                             placeholder=" Enter the new Message"
+                            className=" text-black"
                         />
                         <button onClick={(e)=>{e.preventDefault();sendMessage()}}>Send</button>
                     </div>
