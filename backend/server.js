@@ -66,6 +66,12 @@ io.on("connection",(socket)=>{
   socket.on('public-connect',(data)=>ConnectPlayers(socket,data))
   socket.on('create-room',(data)=>createRoom(data,socket))
   socket.on('join-room',(data)=>joinRoom(data,socket))
+  socket.on('Rmessage',(data)=>{
+    io.to(allPlayers[socket.id].opp_socket_id).emit('receiveMess',data)
+  })
+  socket.on('Pmessage',(data)=>{
+    io.to(playingWithFriends[socket.id].opp_socket_id).emit('receiveMess',data)
+  })
   socket.on('Turn',(data)=>{
     allPlayers[socket.id].turn = data.turn;
     if(!(allPlayers[allPlayers[socket.id].opp_socket_id].turn==='wait')){

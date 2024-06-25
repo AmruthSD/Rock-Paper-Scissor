@@ -28,6 +28,18 @@ export default function PlayFriend(){
     const [oppChoice,setOppChoice] = useState('');
     const [roundLoad,setRoundLoad] = useState(true)
     const [pastResults,setPastResults] = useState([]);
+    const [messages,setMessages] = useState([])
+    const newMessageRef = useRef()
+
+    function sendMessage(){
+        setLoading(true)
+        const newMes = newMessageRef.current.value;
+        newMessageRef.current.value = ''
+        const messObj = {byMe:1,text:newMes}
+        socket.emit('Pmessage',newMes);
+        setMessages(prevmessages=>[...prevmessages,messObj])
+        setLoading(false)
+    }
     useEffect(() => {
         if (!cookies.get('id') || !cookies.get('name')) {
             navigate('/login'); 
@@ -116,14 +128,24 @@ export default function PlayFriend(){
             
         };
 
+        const receiveMessage = (data) =>{
+            setLoading(true)
+            const newMes = data
+            const messObj = {byMe:0,text:newMes}
+            setMessages(prevmessages=>[...prevmessages,messObj])
+            setLoading(false)
+        }
+
         socket.on('priResult', handelResult);
         socket.on('priOpponent-Finished', handelOppFin);
         socket.on('priRound', handelRound);
+        socket.on('receiveMess',receiveMessage)
 
         return () => {
             socket.off('priResult', handelResult);
             socket.off('priOpponent-Finished', handelOppFin);
             socket.off('priRound', handelRound);
+            socket.off('receiveMess',receiveMessage)
         };
     }, []);
 
@@ -325,7 +347,21 @@ export default function PlayFriend(){
                 
                 </div>
                 <div className="w-1/2">
-                    Messages
+                    <div>Messages</div>
+                    <div>
+                        {messages.map((e,i)=>{
+                            return(
+                                <div key={i}>{e.text}</div>
+                            )
+                        })}
+                    </div>
+                    <div>
+                        <input
+                            ref={newMessageRef}
+                            placeholder=" Enter the new Message"
+                        />
+                        <button onClick={(e)=>{e.preventDefault();sendMessage()}}>Send</button>
+                    </div>
                 </div>
                 
                 </div>

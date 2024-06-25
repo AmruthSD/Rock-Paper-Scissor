@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { socket } from "../socket.js";
 import { Cookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,7 @@ import Paper from '../assets/paper.png'
 
 export default function PlayRandom() {
     const navigate = useNavigate();
+    
     const [waiting, setWaiting] = useState(true);
     const cookies = new Cookies();
     const [oppData, setOppData] = useState({});
@@ -25,6 +26,17 @@ export default function PlayRandom() {
     const [roundLoad,setRoundLoad] = useState(true)
     const [pastResults,setPastResults] = useState([]);
     const [messages,setMessages] = useState([])
+    const newMessageRef = useRef()
+
+    function sendMessage(){
+        setLoading(true)
+        const newMes = newMessageRef.current.value;
+        newMessageRef.current.value = ''
+        const messObj = {byMe:1,text:newMes}
+        socket.emit('Rmessage',newMes);
+        setMessages(prevmessages=>[...prevmessages,messObj])
+        setLoading(false)
+    }
     useEffect(() => {
         if (!cookies.get('id') || !cookies.get('name')) {
             navigate('/login'); 
@@ -65,7 +77,7 @@ export default function PlayRandom() {
             }, 3000);
             return () => clearTimeout(timerId);
         };
-
+        
         const handelOppFin = (data) => {
             setLoading(true);
             setOppTurn(data.oppfin);
@@ -95,16 +107,26 @@ export default function PlayRandom() {
             
         };
 
+        const receiveMessage = (data) =>{
+            setLoading(true)
+            const newMes = data
+            const messObj = {byMe:0,text:newMes}
+            setMessages(prevmessages=>[...prevmessages,messObj])
+            setLoading(false)
+        }
+
         socket.on('Stop-Waiting', handelStopWaiting);
         socket.on('Result', handelResult);
         socket.on('Opponent-Finished', handelOppFin);
         socket.on('Round', handelRound);
+        socket.on('receiveMess',receiveMessage)
 
         return () => {
             socket.off('Stop-Waiting', handelStopWaiting);
             socket.off('Result', handelResult);
             socket.off('Opponent-Finished', handelOppFin);
             socket.off('Round', handelRound);
+            socket.off('receiveMess',receiveMessage)
         };
     }, []);
 
@@ -252,7 +274,21 @@ export default function PlayRandom() {
                 
                 </div>
                 <div className="w-1/2">
-                    Messages
+                    <div>Messages</div>
+                    <div>
+                        {messages.map((e,i)=>{
+                            return(
+                                <div key={i}>{e.text}</div>
+                            )
+                        })}
+                    </div>
+                    <div>
+                        <input
+                            ref={newMessageRef}
+                            placeholder=" Enter the new Message"
+                        />
+                        <button onClick={(e)=>{e.preventDefault();sendMessage()}}>Send</button>
+                    </div>
                 </div>
                 
                 </div>
