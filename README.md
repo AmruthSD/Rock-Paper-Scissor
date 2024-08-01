@@ -1,6 +1,8 @@
-### Online Multiplayer Rock-Paper-Scissors (RPS) Game
+# Online Multiplayer Rock-Paper-Scissors (RPS) Game
 
 This project is an online multiplayer game where users can play Rock-Paper-Scissors with random opponents or create private rooms to play with friends. The game features a leaderboard to track ELO ratings of the top players.
+
+## Use the live App [Click Here](https://onlinerps.netlify.app/)
 
 #### Features
 - **Random Matchmaking**: Play with random opponents from around the world.
